@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 577086924}
   - component: {fileID: 577086923}
   - component: {fileID: 577086922}
+  - component: {fileID: 577086926}
   m_Layer: 5
   m_Name: _menuHUD
   m_TagString: Untagged
@@ -496,6 +497,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &577086926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577086921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4745e26fe7c48134cae4ded06bf4b4c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _velocidadeMovimento: 5
+  _forcaPulo: 10
+  _rb: {fileID: 0}
+  _movimentoHorizontal: 0
+  _estaNoChao: 0
+  _spriteJogador: {fileID: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
