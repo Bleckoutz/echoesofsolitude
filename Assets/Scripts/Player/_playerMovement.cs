@@ -12,13 +12,13 @@ public class _playerMovement : MonoBehaviour
 
     [Header("Validação de estado (chão)")]
     [SerializeField] private bool _estaNoChao;
+    [SerializeField] private bool _pulou;
     [SerializeField] private LayerMask _Chao;
     public Transform _verificaChao;
     public float _raioVerificacao = 0.2f;
 
     // Váriaveis internas
-    private Vector2 _movimentoXY;
-    private Vector2 _movimentoX;
+    private float movimentoX, movimentoY;    
     private SpriteRenderer _spriteJogador;
     //[SerializeField] private Animator _animacao;
 
@@ -39,26 +39,31 @@ public class _playerMovement : MonoBehaviour
     void Update()
     {
         // Movimenta o jogador em duas direções distintas sem afetar a sprite na vertical.
+        movimentoX = Input.GetAxis("Horizontal");
+        movimentoY = _estaNoChao ? Input.GetAxis("Vertical") : 0f;
+
         if (_estaNoChao && Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Entrou");
-            _movimentoXY = new Vector2(Input.GetAxis("Horizontal"), 0f);
+            _pulou = true;
             Jump();
-        }else
-            _movimentoXY = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        
+        }
     }
 
     private void FixedUpdate()
     {
         bool estavaNoChao = _estaNoChao;
         VerificaSeChao();
-        _rb.velocity = _movimentoXY * _velocidadeMovimento;
-        _spriteJogador.flipX = (_movimentoXY.x != 0 && _movimentoXY.x < 0) ? true : false;
+        
+
+        _rb.velocity = new Vector2(movimentoX * _velocidadeMovimento, !_pulou ? movimentoY * _velocidadeMovimento : _rb.velocity.y);
+        _spriteJogador.flipX = (_rb.velocity.x != 0 && _rb.velocity.x < 0) ? true : false;
     }
     void Jump()
     {
-        _rb.AddForce(Vector2.up * _forcaPulo, ForceMode2D.Impulse);
+        if (!Input.GetKeyDown(KeyCode.W)) {
+            Debug.Log("Entrou");
+            _rb.AddForce(Vector2.up * _forcaPulo, ForceMode2D.Impulse);
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -70,7 +75,6 @@ public class _playerMovement : MonoBehaviour
     private void VerificaSeChao()
     {
         _estaNoChao = Physics2D.OverlapCircle(_verificaChao.position, _raioVerificacao, _Chao);
-        Debug.Log("DEPOIS: " + _estaNoChao);
     }
 
     bool IsInLayerMask(GameObject obj, LayerMask mask)
