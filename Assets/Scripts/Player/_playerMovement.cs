@@ -6,50 +6,50 @@ using UnityEngine.U2D;
 public class _playerMovement : MonoBehaviour
 {
     [Header("Movimento do player")]
-    [Tooltip("Controla o movimento horizontal e pulo do jogador")]
-    [SerializeField] private float _velocidadeMovimento = 5f;
-    [SerializeField] private float _forcaPulo = 10f;
-    [SerializeField] private Rigidbody2D _rb;
-    [SerializeField] private float _movimentoHorizontal;
-    [SerializeField] private float _movimentoVertical;
+    [Tooltip("Velocidade de movimento do jogador")][SerializeField] private float _velocidadeMovimento = 5f;
+    [Tooltip("Força do pulo do jogador")][SerializeField] private float _forcaPulo = 10f;
+    [Tooltip("Corpo rigido do jogador (global para interação com outros scripts)")][SerializeField] private Rigidbody2D _rb;
+
+    [Header("Validação de estado (chão)")]
     [SerializeField] private bool _estaNoChao;
-    [SerializeField] private SpriteRenderer _spriteJogador;
-    [SerializeField] public Animator _animator;
-    [SerializeField] private string _Chao;
-    [SerializeField] public bool _isGround;
+    [SerializeField] private LayerMask _Chao;
+
+    // Váriaveis internas
+    private Vector2 _movimentoXY;
+    private SpriteRenderer _spriteJogador;
+    [SerializeField] private Animator _animacao;
+    private LayerMask _Chao;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _spriteJogador = GetComponent<SpriteRenderer>();
+        _animacao = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        _spriteJogador = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
-
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        _movimentoHorizontal = Input.GetAxisRaw("Horizontal");
-        _movimentoVertical = Input.GetAxisRaw("Vertical");
-        if (_estaNoChao && Input.GetButtonDown("Jump"))
+        // Movimenta o jogador em duas direções distintas sem afetar a sprite na vertical.
+        _movimentoXY = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if (_estaNoChao && Input.GetKeyDown(KeyCode.Space))
             Jump();
     }
 
     private void FixedUpdate()
     {
-        _rb.velocity = new Vector2(_movimentoHorizontal * _velocidadeMovimento, _movimentoVertical * _velocidadeMovimento);
-        if (_velocidadeMovimento > 0) _spriteJogador.flipX = false;
-        else if (_velocidadeMovimento < 0) _spriteJogador.flipX = true;
+        _rb.velocity = _movimentoXY * _velocidadeMovimento;
+        _spriteJogador.flipX = (_movimentoXY.x != 0 && _movimentoXY.x < 0) ? true : false;
     }
     void Jump()
     {
-        _rb.velocity = new Vector2(_rb.velocity.x, _forcaPulo);
+        _rb.AddForce(Vector2.up * _forcaPulo, ForceMode2D.Impulse);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -59,7 +59,7 @@ public class _playerMovement : MonoBehaviour
             {
                 if (contact.normal.y > 0.5f)
                 {
-                    _isGround = true;
+                    _estaNoChao = true;
                     break;
                 }
             }
@@ -78,13 +78,13 @@ public class _playerMovement : MonoBehaviour
                     break;
                 }
             }
-            _isGround = noChao;
+            _estaNoChao = noChao;
         }
     }
         private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag(_Chao))
-            _isGround = false;
+            _estaNoChao = false;
     }
 
 }
