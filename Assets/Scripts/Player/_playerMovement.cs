@@ -53,7 +53,7 @@ public class _playerMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && movimentoY == 0)
                 _pulou = true;
 
-            if (Input.GetButtonDown("w"))
+            if (Input.GetButtonDown("Vertical"))
                 _rb.gravityScale = 0f;
         }
         else
@@ -96,7 +96,7 @@ public class _playerMovement : MonoBehaviour
     private void VerificaSeChao()
     {
         _estaNoChao = Physics2D.OverlapCircle(_verificaChao.position, _raioVerificacao, _Chao);
-        _rb.gravityScale = 1f;
+        
     }
 }
 

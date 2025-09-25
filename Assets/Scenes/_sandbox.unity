@@ -1067,7 +1067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &874987523
 Transform:
   m_ObjectHideFlags: 0
@@ -2600,7 +2600,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -2624,7 +2624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4745e26fe7c48134cae4ded06bf4b4c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _velocidadeMovimento: 5
+  _velocidadeMovimento: 2
   _forcaPulo: 10
   _rb: {fileID: 0}
   _estaNoChao: 0
@@ -2634,6 +2634,7 @@ MonoBehaviour:
     m_Bits: 8
   _verificaChao: {fileID: 2098803820}
   _raioVerificacao: 0.2
+  _alturaMaximaMovimento: 3
 --- !u!70 &2095992310
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
