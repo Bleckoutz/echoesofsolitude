@@ -17,8 +17,12 @@ public class _playerMovement : MonoBehaviour
     public Transform _verificaChao;
     public float _raioVerificacao = 0.2f;
 
+    [Header("Limite de movimentação vertical com W")]
+    [SerializeField] private float _alturaMaximaMovimento = 5f;
+    private float _alturaInicial;
+
     // Váriaveis internas
-    private float movimentoX, movimentoY;    
+    private float movimentoX, movimentoY;
     private SpriteRenderer _spriteJogador;
     //[SerializeField] private Animator _animacao;
 
@@ -29,16 +33,32 @@ public class _playerMovement : MonoBehaviour
         //_animacao = GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        _alturaInicial = transform.position.y;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        // Movimenta o jogador em duas direções distintas sem afetar a sprite na vertical.
         movimentoX = Input.GetAxis("Horizontal");
-        movimentoY = _estaNoChao ? Input.GetAxis("Vertical") : 0f;
 
-        if (_estaNoChao && Input.GetKeyDown(KeyCode.Space) && movimentoY == 0)
+        if (_estaNoChao)
         {
-            _pulou = true;
+            float _alturaAtual = transform.position.y;
+            bool _podeSubir = _alturaAtual < _alturaInicial + _alturaMaximaMovimento;
+
+            movimentoY = _podeSubir ? Input.GetAxis("Vertical") : 0f;
+
+            if (Input.GetKeyDown(KeyCode.Space) && movimentoY == 0)
+                _pulou = true;
+
+            if (Input.GetButtonDown("w"))
+                _rb.gravityScale = 0f;
+        }
+        else
+        {
+            movimentoY = 0f;
         }
     }
 
@@ -52,7 +72,8 @@ public class _playerMovement : MonoBehaviour
             {
                 _rb.velocity = new Vector2(movimentoX * _velocidadeMovimento, movimentoY * _velocidadeMovimento);
             }
-        } else
+        }
+        else
         {
             _rb.velocity = new Vector2(movimentoX * _velocidadeMovimento, _rb.velocity.y);
         }
@@ -75,7 +96,8 @@ public class _playerMovement : MonoBehaviour
     private void VerificaSeChao()
     {
         _estaNoChao = Physics2D.OverlapCircle(_verificaChao.position, _raioVerificacao, _Chao);
+        _rb.gravityScale = 1f;
     }
 }
 
-    
+
