@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Platform
+  - _jogador
+  - _bastao
   layers:
   - Default
   - TransparentFX
