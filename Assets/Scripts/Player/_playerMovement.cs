@@ -53,8 +53,11 @@ public class _playerMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && movimentoY == 0)
                 _pulou = true;
 
-            if (Input.GetButtonDown("Vertical"))
+            if (Input.GetButtonDown("Vertical") && Input.GetKeyDown(KeyCode.W))
                 _rb.gravityScale = 0f;
+            else if(Input.GetButtonDown("Vertical") && Input.GetKeyDown(KeyCode.S))
+                _rb.gravityScale = 1f;
+
         }
         else
         {
